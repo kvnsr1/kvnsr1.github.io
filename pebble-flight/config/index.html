@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#005500">
+  <meta name="referrer" content="no-referrer">
+  <title>Jetebble · Your flights</title>
+  <style>
+    :root { color-scheme: dark; font-family: "Arial Narrow", "Roboto Condensed", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --ink:#fff; --muted:#b8d5bd; --mint:#aaffaa; --green:#005500; --night:#002610; --panel:#073d20; --line:#39764a; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--night); color:var(--ink); font-size:16px; line-height:1.45; }
+    main { width:min(100%,560px); margin:auto; padding:0 20px 26px; }
+    .hero { position:relative; isolation:isolate; overflow:hidden; margin:0 -20px 28px; padding:25px 24px 39px; background:var(--green); min-height:252px; }
+    .topline { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:30px; font-size:11px; font-weight:750; letter-spacing:.12em; text-transform:uppercase; }
+    .watch-tag { white-space:nowrap; padding:4px 8px; border:1px solid #66a766; border-radius:20px; letter-spacing:.04em; color:var(--mint); }
+    h1 { margin:0; line-height:1; }
+    .wordmark { display:block; width:225px; max-width:72%; height:auto; image-rendering:pixelated; }
+    .tagline { display:block; width:172px; height:auto; margin-top:18px; image-rendering:pixelated; }
+    .hero-plane { position:absolute; width:67px; height:67px; right:24px; top:93px; transform:rotate(-8deg); animation:takeoff .7s ease-out both; }
+    .cloud-bank { position:absolute; width:100%; height:57px; bottom:-17px; left:0; z-index:-1; }
+    .hero-copy { position:relative; max-width:310px; margin:24px 0 0; color:#d8f4d6; font-size:14px; }
+    h2 { margin:0; font-size:24px; line-height:1.18; letter-spacing:-.02em; }
+    .section-heading { display:flex; align-items:center; gap:11px; margin:27px 0 13px; }
+    .section-no { display:grid; flex-shrink:0; width:30px; height:30px; place-items:center; border:1px solid var(--line); border-radius:50%; font-size:12px; color:var(--mint); font-weight:750; }
+    .section-heading p { margin:4px 0 0; color:var(--muted); font-size:14px; }
+    .panel { padding:18px; border:1px solid var(--line); border-radius:18px; background:var(--panel); }
+    details { border-bottom:1px solid var(--line); padding-bottom:17px; margin-bottom:18px; }
+    summary { display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; list-style:none; font-size:17px; font-weight:750; }
+    summary::-webkit-details-marker { display:none; }
+    summary::after { content:'+'; color:var(--mint); font-size:24px; font-weight:400; }
+    details[open] summary::after { content:'−'; }
+    #keyGuide summary { min-height:44px; }
+    #keyGuide summary::after { content:none; }
+    .guide-action { flex-shrink:0; margin-top:1px; padding:4px 8px; border:1px solid var(--line); border-radius:7px; color:var(--mint); font-size:12px; font-weight:500; }
+    .guide-minimize { margin-top:15px; padding:8px 12px; border:1px solid var(--line); background:transparent; color:var(--mint); font-size:13px; }
+    .key-privacy { margin:14px 0 0; font-size:13px; color:var(--muted); }
+    .key-privacy strong { color:#fff; }
+    .guide-intro { margin:12px 0 14px; color:var(--muted); font-size:14px; }
+    .steps { margin:0; padding:0; list-style:none; counter-reset:setup; }
+    .steps li { position:relative; padding:0 0 17px 35px; counter-increment:setup; font-size:14px; }
+    .steps li::before { content:counter(setup); position:absolute; left:0; top:1px; display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--mint); color:#003510; font-size:12px; font-weight:800; }
+    .steps strong { display:block; color:#fff; font-size:15px; margin-bottom:3px; }
+    .steps p { color:var(--muted); margin:0; }
+    a { color:var(--mint); text-underline-offset:3px; text-decoration-thickness:1px; }
+    a:hover { color:#fff; }
+    .billing-note { padding:12px 13px; margin:0; border-left:3px solid var(--mint); background:#003015; border-radius:0 8px 8px 0; color:#d3e7d3; font-size:13px; line-height:1.55; }
+    .billing-note strong { color:#fff; }
+    label { display:block; margin:13px 0 6px; font-size:13px; font-weight:700; color:#e3f2df; }
+    .panel > label:first-child { margin-top:0; }
+    input, select { width:100%; min-height:48px; padding:11px 12px; background:#002b13; border:1px solid #558b61; border-radius:9px; color:#fff; font:inherit; font-size:16px; outline:none; transition:border-color .16s, box-shadow .16s; }
+    input::placeholder { color:#93b49a; opacity:1; }
+    input:focus, select:focus { border-color:var(--mint); box-shadow:0 0 0 3px #aaffaa25; }
+    input[type=date] { min-width:0; color-scheme:dark; }
+    input[type=date]::-webkit-calendar-picker-indicator { opacity:.9; }
+    small { display:block; margin-top:8px; color:var(--muted); font-size:12px; line-height:1.5; }
+    .key-input { display:grid; grid-template-columns:minmax(0,1fr) 64px; gap:8px; }
+    button { font:inherit; cursor:pointer; min-height:44px; border-radius:9px; }
+    .key-toggle { padding:0 12px; border:1px solid #558b61; background:#164c2b; color:#fff; font-size:14px; }
+    button:focus-visible, a:focus-visible, summary:focus-visible { outline:3px solid var(--mint); outline-offset:4px; }
+    .connection-note { display:flex; gap:9px; align-items:flex-start; padding-top:13px; margin:14px 0 0; border-top:1px solid var(--line); font-size:12px; color:var(--muted); }
+    .connection-note svg { flex-shrink:0; margin-top:2px; }
+    .flight-card { min-width:0; position:relative; padding:10px 17px 17px; margin:18px 0; border:1px solid var(--line); border-radius:18px; background:var(--panel); transition:border-color .18s; }
+    .flight-card:focus-within { border-color:var(--mint); }
+    .legend-row { display:inline-flex; align-items:center; gap:8px; padding-right:8px; font-size:14px; font-weight:750; }
+    .slot { display:grid; place-items:center; width:24px; height:24px; border-radius:50%; background:var(--mint); color:#003510; font-size:11px; }
+    .optional { font-size:11px; font-weight:400; color:var(--muted); }
+    .route-preview { display:flex; align-items:center; gap:14px; margin:8px 0 4px; padding-bottom:12px; border-bottom:1px solid var(--line); }
+    .route-code { color:var(--mint); font-size:19px; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .route-code:last-child { margin-left:auto; color:var(--muted); font-size:14px; font-weight:500; flex-shrink:0; }
+    .route-line { flex:1; height:1px; position:relative; border-top:1px dashed #68966e; margin-right:10px; }
+    .route-line::after { content:''; position:absolute; width:28px; height:28px; left:35%; top:-15px; background:url('assets/plane.svg') center/contain no-repeat; transition:left .25s ease-out; }
+    .flight-card:focus-within .route-line::after { left:55%; }
+    .fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; }
+    .fields > div { min-width:0; }
+    .seat-help { min-height:18px; }
+    .clear-flight { display:block; margin:14px 0 0 auto; padding:7px 10px; border:1px solid #578861; background:transparent; color:#c5dfc7; font-size:12px; }
+    .clear-flight:hover { background:#164c2b; color:#fff; }
+    .format-row { display:grid; grid-template-columns:1fr 160px; align-items:center; gap:14px; }
+    .format-row label { margin:0; font-size:16px; }
+    .format-row small { margin-top:4px; }
+    .save-dock { position:sticky; bottom:0; z-index:2; padding:14px 0 max(14px,env(safe-area-inset-bottom)); background:var(--night); margin:18px 0 0; border-top:1px solid var(--line); }
+    #saveButton { width:100%; padding:15px 20px; border:0; background:var(--mint); color:#00330d; font-size:17px; font-weight:800; border-radius:12px; transition:background .15s,transform .15s; }
+    #saveButton:hover { background:#d0ffce; }
+    #saveButton:active { transform:scale(.99); }
+    .save-hint { text-align:center; margin:9px 0 0; font-size:11px; color:var(--muted); }
+    footer { text-align:center; font-size:12px; color:var(--muted); padding:12px 0 0; }
+    .help { padding:0; border:0; margin-top:23px; }
+    .help summary { font-size:15px; }
+    .help p { font-size:13px; color:var(--muted); }
+    @keyframes takeoff { from { opacity:0; transform:translate(-24px,8px) rotate(-8deg); } to { opacity:1; transform:translate(0,0) rotate(-8deg); } }
+    @media (min-width:600px) { main { padding-top:24px; } .hero { border-radius:24px; margin-inline:0; } }
+    @media (max-width:360px) { main { padding-inline:14px; } .hero { margin-inline:-14px; padding-inline:20px; } .hero-plane { right:16px; width:55px; top:103px; } .wordmark { width:198px; } .fields { gap:8px; } input,select { padding-inline:9px; } .panel,.flight-card { padding-inline:13px; } .format-row { grid-template-columns:1fr 142px; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div class="topline"><span>Your flights. On your wrist.</span><span class="watch-tag">Pebble Time 2</span></div>
+    <h1><img class="wordmark" src="assets/wordmark.svg" alt="Jetebble" width="225" height="54"></h1>
+    <img class="tagline" src="assets/tagline.svg" alt="Ready, jet, go" width="172" height="36">
+    <img class="hero-plane" src="assets/plane.svg" alt="" aria-hidden="true" width="67" height="67">
+    <p class="hero-copy" id="intro">Keep up to five flights close, from your departure gate to your next landing.</p>
+    <svg class="cloud-bank" viewBox="0 0 560 70" preserveAspectRatio="none" aria-hidden="true"><g fill="#aaffaa"><circle cx="20" cy="54" r="39"/><circle cx="74" cy="66" r="35"/><circle cx="475" cy="65" r="47"/><circle cx="532" cy="58" r="43"/></g><g fill="#fff"><circle cx="0" cy="48" r="28"/><circle cx="31" cy="41" r="27"/><circle cx="57" cy="56" r="24"/><circle cx="490" cy="52" r="31"/><circle cx="529" cy="36" r="32"/><circle cx="564" cy="54" r="29"/></g></svg>
+  </header>
+  <form id="settings">
+    <div class="section-heading"><span class="section-no" aria-hidden="true">01</span><div><h2>Connect your flight data</h2><p>A one-time setup with FlightAware AeroAPI.</p></div></div>
+    <section class="panel" aria-labelledby="apiKeyLabel">
+      <details id="keyGuide" open>
+        <summary id="keyGuideSummary"><span>How to get your free AeroAPI key</span><span class="guide-action" id="keyGuideAction">Minimize</span></summary>
+        <p class="guide-intro">Jetebble uses FlightAware’s AeroAPI to track your flights. Here’s how to get started:</p>
+        <ol class="steps">
+          <li><strong>Create a FlightAware account.</strong><p>Head to <a href="https://www.flightaware.com/" target="_blank" rel="noopener noreferrer">flightaware.com</a> to create an account, or sign in if you already have one.</p></li>
+          <li><strong>Sign up for AeroAPI.</strong><p>Open <a href="https://www.flightaware.com/commercial/aeroapi/" target="_blank" rel="noopener noreferrer">FlightAware AeroAPI</a> and choose Get started.</p></li>
+          <li><strong>Choose Personal.</strong><p>Select the Personal tier, which includes up to $5 of free API usage each month.</p></li>
+          <li><strong>Complete registration.</strong><p>Enter your billing details and finish signing up.</p></li>
+          <li><strong>Find your API key.</strong><p>Visit the <a href="https://www.flightaware.com/aeroapi/portal/overview" target="_blank" rel="noopener noreferrer">AeroAPI Developer Portal</a>. Your key appears under the Overview tab.</p></li>
+          <li><strong>Paste it into Jetebble.</strong><p>Copy your key into the field below, add your flights and tap Save settings. You’re ready to go!</p></li>
+        </ol>
+        <p class="billing-note"><strong>A quick note about billing.</strong> FlightAware requires a credit card, even for Personal. There’s no fixed monthly subscription fee. Casual personal tracking may fit within the $5 monthly free allowance, but usage beyond it can result in charges. Your cost depends on how much you use the service. Monitor your usage anytime in the <a href="https://www.flightaware.com/aeroapi/portal/usage" target="_blank" rel="noopener noreferrer">AeroAPI Developer Portal</a>, and check <a href="https://www.flightaware.com/commercial/aeroapi/" target="_blank" rel="noopener noreferrer">current pricing</a> for the latest details.</p>
+        <p class="key-privacy"><strong>Keep your key private!</strong> Your API key is personal to you and should not be shared.</p>
+        <button class="guide-minimize" id="minimizeKeyGuide" type="button">Minimize guide ↑</button>
+      </details>
+      <label id="apiKeyLabel" for="apiKey">Your FlightAware AeroAPI key</label>
+      <div class="key-input"><input id="apiKey" type="password" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Paste your AeroAPI key" aria-describedby="keyHelp"><button id="toggleKey" class="key-toggle" type="button" aria-controls="apiKey" aria-pressed="false">Show</button></div>
+      <small id="keyHelp">Saved by the Pebble companion on this phone. Keep your key private.</small>
+      <p class="connection-note"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="3" y="6" width="8" height="7" rx="1" stroke="#aaffaa"/><path d="M4.5 6V4a2.5 2.5 0 015 0v2" stroke="#aaffaa"/></svg><span>Your key is used for requests directly to FlightAware. This page has no analytics or third-party scripts.</span></p>
+    </section>
+    <div class="section-heading"><span class="section-no" aria-hidden="true">02</span><div><h2>Your flights</h2><p>Add up to five. Booking and seat details are optional.</p></div></div>
+    <div id="flights"></div>
+    <div class="section-heading"><span class="section-no" aria-hidden="true">03</span><div><h2>Make it yours</h2></div></div>
+    <section class="panel" aria-labelledby="timeFormatLabel"><div class="format-row"><div><label id="timeFormatLabel" for="timeFormat">Time format</label><small id="timeFormatHelp">For all flights and the app menu. Flight times stay local to each airport.</small></div><select id="timeFormat"><option value="24H">24H · 14:30</option><option value="12H">12H · 2:30 PM</option></select></div></section>
+    <details class="help"><summary>Flight not showing up yet?</summary><p>Double-check the flight number and its departure-airport date. Some flights only become available closer to departure. On your watch, press Select on a flight to see its last update and any service message.</p><p>Need to try again? Hold Select on a flight and choose Refresh flight. Flight data and gate, terminal or baggage details depend on what FlightAware reports.</p></details>
+    <div class="save-dock"><button id="saveButton" type="submit">Save settings &nbsp;→</button><p class="save-hint">Saves your flights and returns you to Pebble.</p></div>
+  </form>
+  <footer>Made for a little less phone, a little more journey.</footer>
+</main>
+<script>
+  var params = new URLSearchParams(location.search);
+  var initialState = {};
+  if (location.hash.indexOf('#state=') === 0) {
+    try { initialState = JSON.parse(decodeURIComponent(location.hash.slice(7))); }
+    catch (ignore) { initialState = {}; }
+  }
+  var flights = document.getElementById('flights');
+  // Older installed companions still cap saved/watch data at three flights.
+  var flightLimit = location.hash.indexOf('#state=') !== 0 || initialState.timeFormat ? 5 : 3;
+  if (flightLimit === 3) {
+    document.getElementById('timeFormat').disabled = true;
+    document.getElementById('timeFormatHelp').textContent = 'Update Jetebble on your watch to version 0.7.8 to enable five flights and 12H/24H.';
+    document.getElementById('intro').textContent = 'Manage your saved flights. Use Up/Down on your watch to browse them.';
+  }
+  document.getElementById('timeFormat').value = initialState.timeFormat === '12H' ? '12H' : '24H';
+  var today = new Date();
+  var localToday = new Date(today.getTime() - today.getTimezoneOffset() * 60000)
+    .toISOString().slice(0, 10);
+  var accents = ['#aaffaa', '#aaffaa', '#aaffaa', '#aaffaa', '#aaffaa'];
+
+  function previewValue(value, fallback) {
+    return value ? value.toUpperCase() : fallback;
+  }
+
+  function inferSeatPosition(value) {
+    var match = String(value || '').trim().toUpperCase().match(/^[1-9]\d?([A-F])$/);
+    if (!match) { return ''; }
+    if (match[1] === 'A' || match[1] === 'F') { return 'window'; }
+    if (match[1] === 'B' || match[1] === 'E') { return 'middle'; }
+    return 'aisle';
+  }
+
+  function positionLabel(value) {
+    return value ? value.charAt(0).toUpperCase() + value.slice(1) : '';
+  }
+
+  function updateSeatPosition(index) {
+    var seatInput = document.getElementById('seatNumber' + index);
+    var positionInput = document.getElementById('seatPosition' + index);
+    var help = document.getElementById('seatHelp' + index);
+    var inferred = inferSeatPosition(seatInput.value);
+    positionInput.options[0].textContent = inferred ?
+      'Auto — ' + positionLabel(inferred) : 'Auto — enter seat';
+    if (positionInput.value === 'auto') {
+      help.textContent = inferred ?
+        'Detected ' + positionLabel(inferred) + ' from seat ' + seatInput.value.trim().toUpperCase() + '.' :
+        'Use a seat such as 12A to detect its position.';
+    } else {
+      help.textContent = 'Manual override: ' + positionLabel(positionInput.value) + '.';
+    }
+  }
+
+  function clearFlight(index) {
+    ['flightNumber', 'flightDate', 'bookingCode', 'seatNumber'].forEach(function(prefix) {
+      var input = document.getElementById(prefix + index);
+      input.value = '';
+      input.setCustomValidity('');
+    });
+    document.getElementById('seatPosition' + index).value = 'auto';
+    updateCard(index);
+    updateSeatPosition(index);
+    document.getElementById('flightNumber' + index).focus();
+  }
+
+  function updateCard(index) {
+    var card = document.getElementById('flightCard' + index);
+    var number = document.getElementById('flightNumber' + index).value.trim();
+    var date = document.getElementById('flightDate' + index).value;
+    document.getElementById('routeNumber' + index).textContent = previewValue(number, 'FLIGHT');
+    document.getElementById('routeDate' + index).textContent = date ? date.slice(5).replace('-', '/') : 'DATE';
+    card.classList.toggle('is-active', Boolean(number || index === 1));
+  }
+
+  for (var i = 1; i <= flightLimit; i += 1) {
+    var fieldset = document.createElement('fieldset');
+    var savedFlight = initialState.flights && initialState.flights[i - 1] || {};
+    var number = savedFlight.flightNumber || params.get('f' + i) ||
+      (i === 1 ? params.get('flightNumber') : '') || '';
+    var date = savedFlight.flightDate || params.get('d' + i) ||
+      (i === 1 ? params.get('flightDate') : '') || '';
+    fieldset.id = 'flightCard' + i;
+    fieldset.className = 'flight-card';
+    fieldset.style.setProperty('--accent', accents[i - 1]);
+    fieldset.innerHTML =
+      '<legend><span class="legend-row"><span class="slot">0' + i + '</span>Flight ' + i +
+        (i === 1 ? '' : ' <span class="optional">optional</span>') + '</span></legend>' +
+      '<div class="route-preview" aria-hidden="true"><span class="route-code" id="routeNumber' + i + '">FLIGHT</span>' +
+        '<span class="route-line"></span><span class="route-code" id="routeDate' + i + '">DATE</span></div>' +
+      '<div class="fields"><div><label for="flightNumber' + i + '">Flight number</label>' +
+        '<input id="flightNumber' + i + '" placeholder="' + (i === 1 ? 'AA100' : 'Optional') + '" ' +
+        'autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" pattern="[A-Za-z0-9]{2,12}"></div>' +
+      '<div><label for="flightDate' + i + '">Departure date</label>' +
+        '<input id="flightDate' + i + '" type="date"></div></div>' +
+      '<div class="fields"><div><label for="bookingCode' + i + '">Booking code</label>' +
+        '<input id="bookingCode' + i + '" placeholder="Optional" autocapitalize="characters" autocomplete="off" ' +
+        'spellcheck="false" maxlength="12"></div>' +
+      '<div><label for="seatNumber' + i + '">Seat number</label>' +
+        '<input id="seatNumber' + i + '" placeholder="12A" autocapitalize="characters" autocomplete="off" ' +
+        'spellcheck="false" maxlength="3" inputmode="text" pattern="[1-9][0-9]?[A-Fa-f]"></div></div>' +
+      '<div><label for="seatPosition' + i + '">Seat position</label>' +
+        '<select id="seatPosition' + i + '"><option value="auto">Auto — enter seat</option>' +
+        '<option value="window">Window</option><option value="middle">Middle</option>' +
+        '<option value="aisle">Aisle</option></select>' +
+        '<small class="seat-help" id="seatHelp' + i + '">Use a seat such as 12A to detect its position.</small></div>' +
+      '<button class="clear-flight" id="clearFlight' + i + '" type="button">Clear flight details</button>';
+    flights.appendChild(fieldset);
+    document.getElementById('flightNumber' + i).value = number;
+    document.getElementById('flightDate' + i).value = date || (i === 1 ? localToday : '');
+    document.getElementById('bookingCode' + i).value = savedFlight.bookingCode || '';
+    document.getElementById('seatNumber' + i).value = savedFlight.seatNumber || '';
+    var inferredPosition = inferSeatPosition(savedFlight.seatNumber || '');
+    var isLegacyOverride = typeof savedFlight.seatPositionOverride === 'undefined' &&
+      savedFlight.seatPosition && savedFlight.seatPosition !== inferredPosition;
+    var hasPositionOverride = savedFlight.seatPositionOverride === true || isLegacyOverride;
+    document.getElementById('seatPosition' + i).value = hasPositionOverride ? savedFlight.seatPosition : 'auto';
+    (function(index) {
+      document.getElementById('flightNumber' + index).addEventListener('input', function() { updateCard(index); });
+      document.getElementById('flightDate' + index).addEventListener('input', function() { updateCard(index); });
+      document.getElementById('seatNumber' + index).addEventListener('input', function() {
+        this.setCustomValidity('');
+        updateSeatPosition(index);
+      });
+      document.getElementById('seatNumber' + index).addEventListener('blur', function() {
+        this.value = this.value.trim().toUpperCase();
+        updateSeatPosition(index);
+      });
+      document.getElementById('seatPosition' + index).addEventListener('change', function() {
+        updateSeatPosition(index);
+      });
+      document.getElementById('clearFlight' + index).addEventListener('click', function() {
+        clearFlight(index);
+      });
+    })(i);
+    updateCard(i);
+    updateSeatPosition(i);
+  }
+
+  document.getElementById('flightNumber1').required = true;
+  document.getElementById('flightDate1').required = true;
+
+  if (initialState.hasApiKey || params.get('hasApiKey') === '1') {
+    document.getElementById('apiKey').placeholder = 'Leave blank to keep saved key';
+    document.getElementById('keyHelp').textContent =
+      'Your key is saved on this phone. Leave this blank to keep it, or paste a new one.';
+  }
+
+  // Store only this display preference, never API keys or flight details.
+  // Reading/writing storage may be blocked by a webview's privacy settings.
+  var guidePreferenceKey = 'jetebble.settings.aeroApiGuideExpanded';
+  var guidePreference;
+  try { guidePreference = localStorage.getItem(guidePreferenceKey); }
+  catch (ignore) {}
+  var keyGuide = document.getElementById('keyGuide');
+  keyGuide.open = guidePreference === '1' || (guidePreference !== '0' &&
+    !(initialState.hasApiKey || params.get('hasApiKey') === '1'));
+  var lastGuideOpen = keyGuide.open;
+  function syncKeyGuide() {
+    document.getElementById('keyGuideAction').textContent = keyGuide.open ? 'Minimize' : 'Show';
+    if (keyGuide.open === lastGuideOpen) { return; }
+    lastGuideOpen = keyGuide.open;
+    try { localStorage.setItem(guidePreferenceKey, keyGuide.open ? '1' : '0'); }
+    catch (ignore) {}
+  }
+  syncKeyGuide();
+  keyGuide.addEventListener('toggle', syncKeyGuide);
+  document.getElementById('minimizeKeyGuide').addEventListener('click', function() {
+    keyGuide.open = false;
+    syncKeyGuide();
+    document.getElementById('keyGuideSummary').focus();
+  });
+
+  document.getElementById('toggleKey').addEventListener('click', function() {
+    var input = document.getElementById('apiKey');
+    var show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    this.textContent = show ? 'Hide' : 'Show';
+    this.ariaPressed = String(show);
+  });
+
+  document.getElementById('settings').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var resultFlights = [];
+    for (var i = 1; i <= flightLimit; i += 1) {
+      var numberInput = document.getElementById('flightNumber' + i);
+      var dateInput = document.getElementById('flightDate' + i);
+      var bookingInput = document.getElementById('bookingCode' + i);
+      var seatInput = document.getElementById('seatNumber' + i);
+      var positionInput = document.getElementById('seatPosition' + i);
+      numberInput.setCustomValidity('');
+      dateInput.setCustomValidity('');
+      seatInput.setCustomValidity('');
+      var number = numberInput.value.trim().toUpperCase();
+      var date = dateInput.value;
+      var bookingCode = bookingInput.value.trim().toUpperCase();
+      var seatNumber = seatInput.value.trim().toUpperCase();
+      var positionChoice = positionInput.value;
+      var inferredPosition = inferSeatPosition(seatNumber);
+      var seatPosition = positionChoice === 'auto' ? inferredPosition : positionChoice;
+      if (number && !date) {
+        dateInput.setCustomValidity('Choose a departure date for this flight.');
+        dateInput.reportValidity();
+        return;
+      }
+      if (!number && (date || bookingCode || seatNumber || positionChoice !== 'auto')) {
+        numberInput.setCustomValidity('Enter a flight number or clear this flight card.');
+        numberInput.reportValidity();
+        return;
+      }
+      if (seatNumber && !inferredPosition) {
+        seatInput.setCustomValidity('Use a row from 1–99 followed by a seat letter A–F, such as 12A.');
+        seatInput.reportValidity();
+        return;
+      }
+      if (positionChoice !== 'auto' && !seatNumber) {
+        seatInput.setCustomValidity('Enter a seat number for this position.');
+        seatInput.reportValidity();
+        return;
+      }
+      if (number) {
+        resultFlights.push({
+          flightNumber: number,
+          flightDate: date,
+          bookingCode: bookingCode,
+          seatNumber: seatNumber,
+          seatPosition: seatPosition,
+          seatPositionOverride: positionChoice !== 'auto'
+        });
+      }
+    }
+    var result = {
+      flights: resultFlights,
+      timeFormat: flightLimit === 5 ? document.getElementById('timeFormat').value : undefined,
+      apiKey: document.getElementById('apiKey').value.trim()
+    };
+    document.getElementById('saveButton').textContent = 'Ready for takeoff  ✓';
+    requestAnimationFrame(function() {
+      location.href = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(result));
+    });
+  });
+</script>
+</body>
+</html>
